@@ -1,0 +1,91 @@
+Build a stunning AI-powered FAQ Bot Generator 
+with a world-class Dribbble-level UI design.
+
+WHAT IT DOES:
+A business owner pastes their business info 
+→ AI generates 10 FAQ questions + answers
+→ Live chat interface to test the bot
+→ Copy-paste embed code to add to any website
+
+DESIGN REQUIREMENTS:
+- Ultra dark background: #050505
+- Accent: Electric purple #8b5cf6 + cyan #06b6d4
+- Font: Space Grotesk (headings) + Inter (body)
+  Import from Google Fonts
+- Glassmorphism cards
+- Smooth animations
+- Professional premium look
+- Gradient text on headings
+- Glowing buttons
+
+LAYOUT — 3 STEPS:
+
+STEP 1: Business Info Input Page
+- Large heading: "Build Your AI FAQ Bot"
+- Subheading: "Paste your business info below"
+- Big textarea for business description
+  (placeholder: "We are a fitness coaching 
+  business that helps people lose weight...")
+- Purple gradient "Generate FAQ Bot →" button
+- Loading animation while generating
+
+STEP 2: FAQ Results + Chat Test Page
+Shows two columns:
+
+Left column: Generated FAQs
+- Card for each FAQ (10 total)
+- Question in white bold text
+- Answer in gray text below
+- Numbered 01-10
+- Glassmorphism card style
+- Hover effect (lift + glow)
+- "Copy All FAQs" button at bottom
+
+Right column: Live Chat Test
+- Chat interface to test the bot
+- Dark chat window
+- User types question → Bot answers from FAQs
+- Message bubbles (purple for user, dark for bot)
+- Input field at bottom
+- "Ask your FAQ bot..." placeholder
+
+STEP 3: Embed Code
+- Code block with embed snippet
+- "Copy Code" button
+- Instructions: "Paste this on your website"
+
+TECHNICAL:
+- Use Groq API (free) for AI generation
+  Endpoint: https://api.groq.com/openai/v1/chat/completions
+  Model: llama-3.1-8b-instant
+- API key stored as GROQ_API_KEY in Replit Secrets
+- Single HTML file OR React — whichever works
+- No broken dependencies
+- Mobile responsive
+
+AI PROMPT TO USE FOR GENERATION:
+"You are a helpful FAQ bot for this business: 
+[business description]. 
+Generate exactly 10 frequently asked questions 
+with clear, helpful answers.
+Format as JSON array: 
+[{question: '...', answer: '...'}, ...]"
+
+ANIMATIONS:
+- Loading spinner while AI generates
+- FAQs fade in one by one (staggered)
+- Chat messages slide in from sides
+- Button hover: scale + glow
+- Page transitions: fade
+
+BACKGROUND:
+- Same GLSL shader as portfolio 
+  (dark purple/cyan morphing noise)
+- Floating particles
+- Grid overlay
+
+Make it look like a $500 SaaS product.
+Someone should want to PAY to use this tool.
+
+Build everything. Check end to end. 
+Fix all bugs. Deploy it.
