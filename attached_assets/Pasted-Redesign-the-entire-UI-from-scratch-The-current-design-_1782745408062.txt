@@ -1,0 +1,230 @@
+Redesign the entire UI from scratch.
+The current design looks too similar to 
+other projects. I need something completely 
+different and unique.
+
+Take inspiration from top Dribbble designs:
+dribbble.com/tags/cool-website
+
+NEW COLOR PALETTE (completely different):
+- Background: #000000 (pure black)
+- Surface: #0d0d0d
+- Border: rgba(255,255,255,0.08)
+- Text primary: #ffffff
+- Text secondary: #888888
+- Accent 1: #ff6b35 (electric orange)
+- Accent 2: #f7c59f (warm cream)
+- Accent 3: #efefd0 (off white)
+- Glow color: rgba(255,107,53,0.3)
+- NO purple. NO cyan. Completely different.
+
+NEW TYPOGRAPHY:
+Import from Google Fonts:
+- Heading font: "Syne" (bold, futuristic)
+- Body font: "DM Sans" (clean, modern)
+- Mono font: "Fira Code" (for code blocks)
+
+DESIGN STYLE — Inspired by Dribbble top designs:
+Take inspiration from:
+- Awwwards.com winner layouts
+- Brutalist + minimal hybrid
+- Large bold typography
+- Asymmetric layouts
+- Strong contrast between elements
+- Oversized numbers (01, 02, 03)
+- Horizontal scrolling sections
+- Split screen layouts
+
+FULL REDESIGN:
+
+BACKGROUND EFFECT:
+Remove old shader. Replace with:
+- Pure black background
+- Subtle orange noise texture (CSS only)
+- Very faint orange grid lines
+- 3 large blurred orange circles 
+  (position: fixed, filter: blur(150px), 
+   opacity: 0.06)
+
+NAVBAR (NEW):
+- Position: fixed top
+- Background: transparent → black on scroll
+- Left: "FAQBOT" text logo
+  (Syne font, bold, white)
+- Right: "Generate Free →" button
+  Background: #ff6b35
+  Color: black
+  Font: Syne bold
+  Padding: 10px 24px
+  Border-radius: 4px (sharp corners, not rounded)
+  No border-radius on brand elements
+
+HERO SECTION (COMPLETELY NEW):
+Layout: Full screen, centered
+
+Top: Small badge
+"✦ Powered by Groq AI · Free to use"
+(DM Sans, 13px, orange color, border: 1px solid orange)
+
+Main heading (GIANT):
+Line 1: "Your Business."
+(Syne, clamp(4rem, 12vw, 9rem), white, -0.04em letter spacing)
+Line 2: "Answered."
+(Same size but color: #ff6b35)
+
+Below heading:
+"Paste your business info. Get 10 AI-generated
+FAQs in seconds. Embed on any website. Free."
+(DM Sans, 1.125rem, #888888)
+
+Stat row below desc:
+"10 FAQs" | "< 30 seconds" | "Free forever"
+(Syne bold for numbers, DM Sans for labels)
+
+Big textarea input:
+- Dark background (#0d0d0d)
+- Border: 1px solid rgba(255,255,255,0.1)
+- Border-radius: 4px
+- On focus: border-color: #ff6b35
+- Font: "Fira Code", 14px
+- Placeholder: "Describe your business here..."
+- Min-height: 160px
+- Width: 100%
+
+Generate button:
+- Text: "Generate FAQ Bot →"
+- Background: #ff6b35
+- Color: #000000
+- Font: Syne, 16px, bold
+- Padding: 16px 40px
+- Border-radius: 4px
+- No box-shadow by default
+- Hover: background white, color black
+- Transition: 0.2s
+
+LOADING STATE:
+- Full screen overlay: rgba(0,0,0,0.9)
+- Center: Large "01" counter counting up
+  (Syne, 8rem, #ff6b35)
+- Below: "Generating your FAQ bot..."
+  (DM Sans, white)
+- Animated orange progress line at top
+
+RESULTS PAGE (STEP 2):
+Layout: Split screen (2 columns, gap: 0)
+
+LEFT HALF (FAQs):
+- Background: #000000
+- Border-right: 1px solid rgba(255,255,255,0.06)
+- Padding: 60px 48px
+
+Top label:
+"— YOUR FAQS"
+(DM Sans, 11px, #ff6b35, letter-spacing: 0.15em)
+
+Heading: "10 Questions
+Answered."
+(Syne, 2.5rem, white)
+
+Each FAQ card:
+- No card background (just border-bottom)
+- Border-bottom: 1px solid rgba(255,255,255,0.06)
+- Padding: 24px 0
+- Number: "01" "02" etc.
+  (Syne, 11px, #ff6b35, letter-spacing: 0.1em)
+- Question: (Syne, 1rem, white, bold, margin-top: 8px)
+- Answer: (DM Sans, 14px, #888888, margin-top: 8px)
+- Hover: question turns #ff6b35
+
+Copy All button:
+- Outlined style
+- Border: 1px solid rgba(255,255,255,0.2)
+- Color: white
+- Hover: background #ff6b35, color black, border-color #ff6b35
+
+RIGHT HALF (Chat):
+- Background: #050505
+- Padding: 60px 48px
+- Sticky top
+
+Top label: "— TEST YOUR BOT"
+Heading: "Chat with
+your FAQ bot."
+
+Chat window:
+- Height: 400px
+- Overflow: scroll
+- No border (clean look)
+
+User message bubble:
+- Background: #ff6b35
+- Color: #000000
+- Border-radius: 4px 4px 0 4px
+- Font: DM Sans, 14px
+- Align: right
+
+Bot message bubble:
+- Background: #1a1a1a
+- Color: #ffffff
+- Border: 1px solid rgba(255,255,255,0.06)
+- Border-radius: 4px 4px 4px 0
+- Align: left
+
+Input area:
+- Border-top: 1px solid rgba(255,255,255,0.06)
+- Input: dark background, no border
+- Send button: #ff6b35 background, black text
+
+STEP 3 — EMBED CODE:
+- Full width section
+- Background: #0d0d0d
+- Border: 1px solid rgba(255,255,255,0.06)
+- Border-radius: 4px
+
+Section label: "— EMBED CODE"
+Heading: "Add to your website
+in 60 seconds."
+
+Code block:
+- Background: #000000
+- Border: 1px solid rgba(255,107,53,0.2)
+- Font: Fira Code, 13px
+- Color: #ff6b35 for tags, white for content
+- Border-radius: 4px
+- Padding: 24px
+
+Copy button:
+- Small, top right of code block
+- Background: #ff6b35
+- Color: black
+- Syne font
+
+Instructions below:
+3 steps shown as:
+"01 → Copy the code"
+"02 → Open your website HTML"  
+"03 → Paste before </body>"
+(each on its own line, Syne font)
+
+FOOTER:
+- Minimal
+- "FAQBOT — Built by Jothi Ganesh"
+- Right: "jothiganesh.netlify.app"
+
+ANIMATIONS:
+- FAQ cards: slide in from left, staggered 80ms
+- Chat messages: slide in from respective sides
+- Buttons: NO scale — just color change (more refined)
+- Page loads: quick 300ms fade in
+- Loading counter: counts 0→100 in 2 seconds
+
+MOBILE:
+- Split screen stacks vertically
+- FAQ section first, chat below
+- Font sizes scale down with clamp()
+- Full width buttons
+
+Check everything end to end.
+Fix all bugs.
+Make it look like a $1000 SaaS product.
+Different from any other project I have.
