@@ -3,13 +3,15 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: AI FAQ Bot Generator API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: faq
+    description: FAQ generation and chat operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,71 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /faq/generate:
+    post:
+      operationId: generateFaqs
+      tags: [faq]
+      summary: Generate FAQs from business description
+      description: Uses AI to generate 10 FAQ question/answer pairs from business info
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FaqGenerateInput"
+      responses:
+        "200":
+          description: Successfully generated FAQs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FaqGenerateResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "500":
+          description: AI generation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /faq/chat:
+    post:
+      operationId: chatWithBot
+      tags: [faq]
+      summary: Chat with the FAQ bot
+      description: Answers a user question using the generated FAQ context
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatInput"
+      responses:
+        "200":
+          description: Bot response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "500":
+          description: AI error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +101,56 @@ components:
       required:
         - status
 
+    FaqItem:
+      type: object
+      required: [question, answer]
+      properties:
+        question:
+          type: string
+        answer:
+          type: string
+
+    FaqGenerateInput:
+      type: object
+      required: [businessDescription]
+      properties:
+        businessDescription:
+          type: string
+          minLength: 10
+
+    FaqGenerateResult:
+      type: object
+      required: [faqs]
+      properties:
+        faqs:
+          type: array
+          items:
+            $ref: "#/components/schemas/FaqItem"
+
+    ChatInput:
+      type: object
+      required: [question, faqs]
+      properties:
+        question:
+          type: string
+          minLength: 1
+        faqs:
+          type: array
+          items:
+            $ref: "#/components/schemas/FaqItem"
+        businessDescription:
+          type: ["string", "null"]
+
+    ChatResult:
+      type: object
+      required: [answer]
+      properties:
+        answer:
+          type: string
+
+    ApiError:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

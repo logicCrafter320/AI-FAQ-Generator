@@ -5,7 +5,8 @@
  * AI FAQ Bot Generator API
  * OpenAPI spec version: 0.1.0
  */
+import type { FaqItem } from './faqItem';
 
-export interface HealthStatus {
-  status: string;
+export interface FaqGenerateResult {
+  faqs: FaqItem[];
 }
