@@ -91,6 +91,57 @@ paths:
               schema:
                 $ref: "#/components/schemas/ApiError"
 
+  /faq/bots:
+    post:
+      operationId: createBot
+      tags: [faq]
+      summary: Save a generated FAQ bot and get a shareable link
+      description: Persists the business description and FAQs, returning a unique bot id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBotInput"
+      responses:
+        "200":
+          description: Bot saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bot"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /faq/bots/{id}:
+    get:
+      operationId: getBot
+      tags: [faq]
+      summary: Fetch a saved FAQ bot by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Bot found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bot"
+        "404":
+          description: Bot not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
 components:
   schemas:
     HealthStatus:
@@ -153,4 +204,31 @@ components:
       required: [error]
       properties:
         error:
+          type: string
+
+    CreateBotInput:
+      type: object
+      required: [businessDescription, faqs]
+      properties:
+        businessDescription:
+          type: string
+          minLength: 10
+        faqs:
+          type: array
+          items:
+            $ref: "#/components/schemas/FaqItem"
+
+    Bot:
+      type: object
+      required: [id, businessDescription, faqs, createdAt]
+      properties:
+        id:
+          type: string
+        businessDescription:
+          type: string
+        faqs:
+          type: array
+          items:
+            $ref: "#/components/schemas/FaqItem"
+        createdAt:
           type: string

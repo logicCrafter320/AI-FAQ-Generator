@@ -21,8 +21,10 @@ import type {
 
 import type {
   ApiError,
+  Bot,
   ChatInput,
   ChatResult,
+  CreateBotInput,
   FaqGenerateInput,
   FaqGenerateResult,
   HealthStatus
@@ -274,4 +276,152 @@ export const useChatWithBot = <TError = ErrorType<ApiError>,
       > => {
       return useMutation(getChatWithBotMutationOptions(options));
     }
+
+export const getCreateBotUrl = () => {
+
+
+
+
+  return `/api/faq/bots`
+}
+
+/**
+ * Persists the business description and FAQs, returning a unique bot id
+ * @summary Save a generated FAQ bot and get a shareable link
+ */
+export const createBot = async (createBotInput: CreateBotInput, options?: RequestInit): Promise<Bot> => {
+
+  return customFetch<Bot>(getCreateBotUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(createBotInput)
+  }
+);}
+
+
+
+
+export const getCreateBotMutationOptions = <TError = ErrorType<ApiError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createBot>>, TError,{data: BodyType<CreateBotInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createBot>>, TError,{data: BodyType<CreateBotInput>}, TContext> => {
+
+const mutationKey = ['createBot'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createBot>>, {data: BodyType<CreateBotInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createBot(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateBotMutationResult = NonNullable<Awaited<ReturnType<typeof createBot>>>
+    export type CreateBotMutationBody = BodyType<CreateBotInput>
+    export type CreateBotMutationError = ErrorType<ApiError>
+
+    /**
+ * @summary Save a generated FAQ bot and get a shareable link
+ */
+export const useCreateBot = <TError = ErrorType<ApiError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createBot>>, TError,{data: BodyType<CreateBotInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createBot>>,
+        TError,
+        {data: BodyType<CreateBotInput>},
+        TContext
+      > => {
+      return useMutation(getCreateBotMutationOptions(options));
+    }
+
+export const getGetBotUrl = (id: string,) => {
+
+
+
+
+  return `/api/faq/bots/${id}`
+}
+
+/**
+ * @summary Fetch a saved FAQ bot by id
+ */
+export const getBot = async (id: string, options?: RequestInit): Promise<Bot> => {
+
+  return customFetch<Bot>(getGetBotUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetBotQueryKey = (id: string,) => {
+    return [
+    `/api/faq/bots/${id}`
+    ] as const;
+    }
+
+
+export const getGetBotQueryOptions = <TData = Awaited<ReturnType<typeof getBot>>, TError = ErrorType<ApiError>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBot>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetBotQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getBot>>> = ({ signal }) => getBot(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getBot>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetBotQueryResult = NonNullable<Awaited<ReturnType<typeof getBot>>>
+export type GetBotQueryError = ErrorType<ApiError>
+
+
+/**
+ * @summary Fetch a saved FAQ bot by id
+ */
+
+export function useGetBot<TData = Awaited<ReturnType<typeof getBot>>, TError = ErrorType<ApiError>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getBot>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetBotQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 

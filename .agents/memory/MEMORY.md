@@ -1,0 +1,1 @@
+- [Screenshot ghost artifact](screenshot-ghost-artifact.md) — stale ghost text in app_preview screenshots isn't a real bug, verify by editing content before chasing CSS

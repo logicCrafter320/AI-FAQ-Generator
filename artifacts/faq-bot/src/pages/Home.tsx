@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useGenerateFaqs, useChatWithBot } from "@workspace/api-client-react";
+import { useGenerateFaqs, useChatWithBot, useCreateBot } from "@workspace/api-client-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import type { FaqItem } from "@workspace/api-client-react";
@@ -17,6 +17,9 @@ export default function Home() {
 
   const generateFaqs = useGenerateFaqs();
   const chatWithBot = useChatWithBot();
+  const createBot = useCreateBot();
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [isShareCopied, setIsShareCopied] = useState(false);
 
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState("");
@@ -76,7 +79,7 @@ export default function Home() {
         onError: (err) => {
           toast({
             title: "Generation failed",
-            description: err.error || "An error occurred while generating FAQs.",
+            description: err.data?.error || "An error occurred while generating FAQs.",
             variant: "destructive",
           });
         }
@@ -126,6 +129,33 @@ export default function Home() {
     setIsEmbedCopied(true);
     toast({ title: "Embed code copied!" });
     setTimeout(() => setIsEmbedCopied(false), 2000);
+  };
+
+  const handleSaveAndShare = () => {
+    createBot.mutate(
+      { data: { businessDescription, faqs } },
+      {
+        onSuccess: (result) => {
+          const url = `${window.location.origin}/bot/${result.id}`;
+          setShareUrl(url);
+        },
+        onError: (err) => {
+          toast({
+            title: "Failed to create share link",
+            description: err.data?.error || "An error occurred while saving your bot.",
+            variant: "destructive",
+          });
+        },
+      }
+    );
+  };
+
+  const handleCopyShareUrl = () => {
+    if (!shareUrl) return;
+    navigator.clipboard.writeText(shareUrl);
+    setIsShareCopied(true);
+    toast({ title: "Share link copied!" });
+    setTimeout(() => setIsShareCopied(false), 2000);
   };
 
   const scrollToInput = () => {
@@ -432,6 +462,44 @@ export default function Home() {
                 <div><span className="text-[#ff6b35]">03 &rarr;</span> Paste before &lt;/body&gt;</div>
               </div>
 
+              <div className="mt-16 pt-10 border-t border-white/5">
+                <div className="text-[#ff6b35] text-[11px] font-medium tracking-[0.2em] mb-4">
+                  &mdash; SHARE
+                </div>
+                <h2 className="mb-6">
+                  <div className="font-syne font-extrabold text-[2rem] text-white leading-tight">Share your bot</div>
+                  <div className="font-syne font-extrabold text-[2rem] text-[#ff6b35] leading-tight">with a link.</div>
+                </h2>
+
+                {!shareUrl ? (
+                  <button
+                    data-testid="button-save-share"
+                    onClick={handleSaveAndShare}
+                    disabled={createBot.isPending}
+                    className="bg-[#ff6b35] text-black font-syne font-bold text-base py-4 px-10 rounded-[4px] hover:bg-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {createBot.isPending ? "Saving..." : "Save & Get Share Link \u2192"}
+                  </button>
+                ) : (
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                      data-testid="input-share-url"
+                      readOnly
+                      value={shareUrl}
+                      className="flex-1 bg-[#0d0d0d] border border-white/10 rounded-[4px] font-fira text-sm text-white h-12 px-4 focus:outline-none"
+                      onFocus={(e) => e.target.select()}
+                    />
+                    <button
+                      data-testid="button-copy-share-url"
+                      onClick={handleCopyShareUrl}
+                      className="bg-[#ff6b35] text-black font-syne font-bold h-12 px-6 rounded-[4px] hover:bg-white transition-colors shrink-0"
+                    >
+                      {isShareCopied ? "Copied!" : "Copy Link"}
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <button
                 data-testid="button-start-over"
                 onClick={() => {
@@ -439,6 +507,7 @@ export default function Home() {
                   setBusinessDescription("");
                   setFaqs([]);
                   setChatMessages([]);
+                  setShareUrl(null);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 className="mt-12 bg-transparent border border-white/15 text-[#888888] font-dm px-8 py-3 rounded-[4px] hover:border-[#ff6b35] hover:text-[#ff6b35] transition-colors"

@@ -39,3 +39,16 @@ export interface ApiError {
   error: string;
 }
 
+export interface CreateBotInput {
+  /** @minLength 10 */
+  businessDescription: string;
+  faqs: FaqItem[];
+}
+
+export interface Bot {
+  id: string;
+  businessDescription: string;
+  faqs: FaqItem[];
+  createdAt: string;
+}
+

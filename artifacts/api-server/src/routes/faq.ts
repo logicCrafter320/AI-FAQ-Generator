@@ -1,5 +1,8 @@
+import { randomUUID } from "node:crypto";
 import { Router, type IRouter } from "express";
-import { GenerateFaqsBody, ChatWithBotBody } from "@workspace/api-zod";
+import { eq } from "drizzle-orm";
+import { GenerateFaqsBody, ChatWithBotBody, CreateBotBody } from "@workspace/api-zod";
+import { db, botsTable } from "@workspace/db";
 import { logger } from "../lib/logger";
 
 const router: IRouter = Router();
@@ -112,6 +115,57 @@ Answer the user's question based on the FAQ content above. If the question match
   } catch (err) {
     req.log.error({ err }, "Chat request failed");
     res.status(500).json({ error: "Failed to get a response. Please try again." });
+  }
+});
+
+router.post("/faq/bots", async (req, res): Promise<void> => {
+  const parsed = CreateBotBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  const { businessDescription, faqs } = parsed.data;
+  const id = randomUUID();
+
+  try {
+    const [bot] = await db
+      .insert(botsTable)
+      .values({ id, businessDescription, faqs })
+      .returning();
+
+    res.json({
+      id: bot.id,
+      businessDescription: bot.businessDescription,
+      faqs: bot.faqs,
+      createdAt: bot.createdAt.toISOString(),
+    });
+  } catch (err) {
+    req.log.error({ err }, "Failed to save bot");
+    res.status(500).json({ error: "Failed to save bot. Please try again." });
+  }
+});
+
+router.get("/faq/bots/:id", async (req, res): Promise<void> => {
+  const { id } = req.params;
+
+  try {
+    const [bot] = await db.select().from(botsTable).where(eq(botsTable.id, id)).limit(1);
+
+    if (!bot) {
+      res.status(404).json({ error: "Bot not found" });
+      return;
+    }
+
+    res.json({
+      id: bot.id,
+      businessDescription: bot.businessDescription,
+      faqs: bot.faqs,
+      createdAt: bot.createdAt.toISOString(),
+    });
+  } catch (err) {
+    req.log.error({ err }, "Failed to fetch bot");
+    res.status(500).json({ error: "Failed to fetch bot." });
   }
 });
 

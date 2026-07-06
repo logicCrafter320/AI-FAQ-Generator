@@ -7,8 +7,10 @@
  */
 
 export * from './apiError';
+export * from './bot';
 export * from './chatInput';
 export * from './chatResult';
+export * from './createBotInput';
 export * from './faqGenerateInput';
 export * from './faqGenerateResult';
 export * from './faqItem';

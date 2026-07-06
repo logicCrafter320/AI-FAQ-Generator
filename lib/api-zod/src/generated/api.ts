@@ -58,3 +58,48 @@ export const ChatWithBotResponse = zod.object({
 })
 
 
+/**
+ * Persists the business description and FAQs, returning a unique bot id
+ * @summary Save a generated FAQ bot and get a shareable link
+ */
+export const createBotBodyBusinessDescriptionMin = 10;
+
+
+
+export const CreateBotBody = zod.object({
+  "businessDescription": zod.string().min(createBotBodyBusinessDescriptionMin),
+  "faqs": zod.array(zod.object({
+  "question": zod.string(),
+  "answer": zod.string()
+}))
+})
+
+export const CreateBotResponse = zod.object({
+  "id": zod.string(),
+  "businessDescription": zod.string(),
+  "faqs": zod.array(zod.object({
+  "question": zod.string(),
+  "answer": zod.string()
+})),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Fetch a saved FAQ bot by id
+ */
+export const GetBotParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const GetBotResponse = zod.object({
+  "id": zod.string(),
+  "businessDescription": zod.string(),
+  "faqs": zod.array(zod.object({
+  "question": zod.string(),
+  "answer": zod.string()
+})),
+  "createdAt": zod.string()
+})
+
+
