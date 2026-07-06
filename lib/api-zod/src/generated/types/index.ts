@@ -17,3 +17,4 @@ export * from './faqItem';
 export * from './healthStatus';
 export * from './listBots200';
 export * from './listBotsParams';
+export * from './updateBotInput';

@@ -50,6 +50,11 @@ export interface CreateBotInput {
   faqs: FaqItem[];
 }
 
+export interface UpdateBotInput {
+  /** @minItems 1 */
+  faqs: FaqItem[];
+}
+
 export interface Bot {
   id: string;
   businessDescription: string;

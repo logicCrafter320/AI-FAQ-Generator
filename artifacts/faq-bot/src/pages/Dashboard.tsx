@@ -121,6 +121,13 @@ export default function Dashboard() {
                 >
                   View &rarr;
                 </Link>
+                <Link
+                  href={`/bot/${bot.id}/edit`}
+                  data-testid={`link-edit-bot-${bot.id}`}
+                  className="bg-white/5 hover:bg-white/10 text-white font-syne font-bold text-sm px-4 py-2 rounded-[4px] transition-colors"
+                >
+                  Edit
+                </Link>
                 <button
                   onClick={() => handleCopy(bot.id)}
                   data-testid={`button-copy-bot-${bot.id}`}

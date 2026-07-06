@@ -166,6 +166,42 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
+    patch:
+      operationId: updateBot
+      tags: [faq]
+      summary: Update a saved FAQ bot's FAQs
+      description: Overwrites the FAQ list for an existing saved bot
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBotInput"
+      responses:
+        "200":
+          description: Bot updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bot"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Bot not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 
 components:
   schemas:
@@ -243,6 +279,16 @@ components:
           minLength: 10
         faqs:
           type: array
+          items:
+            $ref: "#/components/schemas/FaqItem"
+
+    UpdateBotInput:
+      type: object
+      required: [faqs]
+      properties:
+        faqs:
+          type: array
+          minItems: 1
           items:
             $ref: "#/components/schemas/FaqItem"
 

@@ -131,3 +131,34 @@ export const GetBotResponse = zod.object({
 })
 
 
+/**
+ * Overwrites the FAQ list for an existing saved bot
+ * @summary Update a saved FAQ bot's FAQs
+ */
+export const UpdateBotParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+export const UpdateBotBody = zod.object({
+  "faqs": zod.array(zod.object({
+  "question": zod.string(),
+  "answer": zod.string()
+})).min(1)
+})
+
+export const UpdateBotResponse = zod.object({
+  "id": zod.string(),
+  "businessDescription": zod.string(),
+  "faqs": zod.array(zod.object({
+  "question": zod.string(),
+  "answer": zod.string()
+})),
+  "createdAt": zod.string(),
+  "viewCount": zod.number(),
+  "chatCount": zod.number()
+})
+
+

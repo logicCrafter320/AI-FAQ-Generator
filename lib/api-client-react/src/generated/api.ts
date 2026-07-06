@@ -29,7 +29,8 @@ import type {
   FaqGenerateResult,
   HealthStatus,
   ListBots200,
-  ListBotsParams
+  ListBotsParams,
+  UpdateBotInput
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -511,4 +512,76 @@ export function useGetBot<TData = Awaited<ReturnType<typeof getBot>>, TError = E
 
 
 
+
+export const getUpdateBotUrl = (id: string,) => {
+
+
+
+
+  return `/api/faq/bots/${id}`
+}
+
+/**
+ * Overwrites the FAQ list for an existing saved bot
+ * @summary Update a saved FAQ bot's FAQs
+ */
+export const updateBot = async (id: string,
+    updateBotInput: UpdateBotInput, options?: RequestInit): Promise<Bot> => {
+
+  return customFetch<Bot>(getUpdateBotUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(updateBotInput)
+  }
+);}
+
+
+
+
+export const getUpdateBotMutationOptions = <TError = ErrorType<ApiError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateBot>>, TError,{id: string;data: BodyType<UpdateBotInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateBot>>, TError,{id: string;data: BodyType<UpdateBotInput>}, TContext> => {
+
+const mutationKey = ['updateBot'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateBot>>, {id: string;data: BodyType<UpdateBotInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateBot(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateBotMutationResult = NonNullable<Awaited<ReturnType<typeof updateBot>>>
+    export type UpdateBotMutationBody = BodyType<UpdateBotInput>
+    export type UpdateBotMutationError = ErrorType<ApiError>
+
+    /**
+ * @summary Update a saved FAQ bot's FAQs
+ */
+export const useUpdateBot = <TError = ErrorType<ApiError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateBot>>, TError,{id: string;data: BodyType<UpdateBotInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateBot>>,
+        TError,
+        {id: string;data: BodyType<UpdateBotInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateBotMutationOptions(options));
+    }
 

@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/Home";
 import SharedBot from "@/pages/SharedBot";
 import Dashboard from "@/pages/Dashboard";
+import EditBot from "@/pages/EditBot";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient({
@@ -23,6 +24,7 @@ function App() {
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/dashboard" component={Dashboard} />
+            <Route path="/bot/:id/edit" component={EditBot} />
             <Route path="/bot/:id" component={SharedBot} />
             <Route component={NotFound} />
           </Switch>

@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { Router, type IRouter } from "express";
 import { eq, inArray, sql } from "drizzle-orm";
-import { GenerateFaqsBody, ChatWithBotBody, CreateBotBody } from "@workspace/api-zod";
+import { GenerateFaqsBody, ChatWithBotBody, CreateBotBody, UpdateBotBody } from "@workspace/api-zod";
 import { db, botsTable } from "@workspace/db";
 import { logger } from "../lib/logger";
 
@@ -212,6 +212,42 @@ router.get("/faq/bots/:id", async (req, res): Promise<void> => {
   } catch (err) {
     req.log.error({ err }, "Failed to fetch bot");
     res.status(500).json({ error: "Failed to fetch bot." });
+  }
+});
+
+router.patch("/faq/bots/:id", async (req, res): Promise<void> => {
+  const { id } = req.params;
+  const parsed = UpdateBotBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  const { faqs } = parsed.data;
+
+  try {
+    const [updated] = await db
+      .update(botsTable)
+      .set({ faqs })
+      .where(eq(botsTable.id, id))
+      .returning();
+
+    if (!updated) {
+      res.status(404).json({ error: "Bot not found" });
+      return;
+    }
+
+    res.json({
+      id: updated.id,
+      businessDescription: updated.businessDescription,
+      faqs: updated.faqs,
+      createdAt: updated.createdAt.toISOString(),
+      viewCount: updated.viewCount,
+      chatCount: updated.chatCount,
+    });
+  } catch (err) {
+    req.log.error({ err }, "Failed to update bot");
+    res.status(500).json({ error: "Failed to update bot." });
   }
 });
 
