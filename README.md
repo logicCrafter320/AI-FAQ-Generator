@@ -85,19 +85,6 @@ Paste on your website before </body>
 
 ---
 
-## Screenshots
-
-### Hero
-![Hero](screenshots/hero.png)
-
-### FAQ Results + Chat
-![Results](screenshots/results.png)
-
-### Embed Code
-![Embed](screenshots/embed.png)
-
----
-
 ## Use Cases
 
 - Restaurant websites
