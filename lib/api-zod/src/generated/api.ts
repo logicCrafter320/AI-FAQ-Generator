@@ -59,6 +59,27 @@ export const ChatWithBotResponse = zod.object({
 
 
 /**
+ * Returns saved bots matching the given comma-separated ids, used to render a local "My Bots" list
+ * @summary Fetch multiple saved FAQ bots by id
+ */
+export const ListBotsQueryParams = zod.object({
+  "ids": zod.coerce.string().describe('Comma-separated list of bot ids')
+})
+
+export const ListBotsResponse = zod.object({
+  "bots": zod.array(zod.object({
+  "id": zod.string(),
+  "businessDescription": zod.string(),
+  "faqs": zod.array(zod.object({
+  "question": zod.string(),
+  "answer": zod.string()
+})),
+  "createdAt": zod.string()
+}))
+})
+
+
+/**
  * Persists the business description and FAQs, returning a unique bot id
  * @summary Save a generated FAQ bot and get a shareable link
  */

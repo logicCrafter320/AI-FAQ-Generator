@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/Home";
 import SharedBot from "@/pages/SharedBot";
+import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient({
@@ -21,6 +22,7 @@ function App() {
         <div className="dark">
           <Switch>
             <Route path="/" component={Home} />
+            <Route path="/dashboard" component={Dashboard} />
             <Route path="/bot/:id" component={SharedBot} />
             <Route component={NotFound} />
           </Switch>

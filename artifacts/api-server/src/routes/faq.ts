@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { Router, type IRouter } from "express";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { GenerateFaqsBody, ChatWithBotBody, CreateBotBody } from "@workspace/api-zod";
 import { db, botsTable } from "@workspace/db";
 import { logger } from "../lib/logger";
@@ -115,6 +115,35 @@ Answer the user's question based on the FAQ content above. If the question match
   } catch (err) {
     req.log.error({ err }, "Chat request failed");
     res.status(500).json({ error: "Failed to get a response. Please try again." });
+  }
+});
+
+router.get("/faq/bots", async (req, res): Promise<void> => {
+  const idsParam = typeof req.query.ids === "string" ? req.query.ids : "";
+  const ids = idsParam
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean);
+
+  if (ids.length === 0) {
+    res.json({ bots: [] });
+    return;
+  }
+
+  try {
+    const bots = await db.select().from(botsTable).where(inArray(botsTable.id, ids));
+
+    res.json({
+      bots: bots.map((bot) => ({
+        id: bot.id,
+        businessDescription: bot.businessDescription,
+        faqs: bot.faqs,
+        createdAt: bot.createdAt.toISOString(),
+      })),
+    });
+  } catch (err) {
+    req.log.error({ err }, "Failed to list bots");
+    res.status(500).json({ error: "Failed to fetch bots." });
   }
 });
 

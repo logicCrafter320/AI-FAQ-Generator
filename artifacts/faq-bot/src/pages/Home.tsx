@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from "react";
+import { Link } from "wouter";
 import { useGenerateFaqs, useChatWithBot, useCreateBot } from "@workspace/api-client-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+import { addSavedBotId } from "@/lib/savedBots";
 import type { FaqItem } from "@workspace/api-client-react";
 
 type ChatMessage = {
@@ -138,6 +140,7 @@ export default function Home() {
         onSuccess: (result) => {
           const url = `${window.location.origin}/bot/${result.id}`;
           setShareUrl(url);
+          addSavedBotId(result.id);
         },
         onError: (err) => {
           toast({
@@ -192,12 +195,21 @@ export default function Home() {
         }`}
       >
         <div className="font-syne font-extrabold text-lg text-white tracking-[-0.02em]">FAQBOT</div>
-        <button 
-          onClick={scrollToInput}
-          className="bg-[#ff6b35] text-black font-syne font-bold px-6 py-2.5 rounded-[4px] hover:bg-white transition-colors duration-200"
-        >
-          Generate Free &rarr;
-        </button>
+        <div className="flex items-center gap-4 md:gap-6">
+          <Link
+            href="/dashboard"
+            data-testid="link-my-bots"
+            className="font-syne font-bold text-sm text-white hover:text-[#ff6b35] transition-colors duration-200"
+          >
+            My Bots
+          </Link>
+          <button 
+            onClick={scrollToInput}
+            className="bg-[#ff6b35] text-black font-syne font-bold px-6 py-2.5 rounded-[4px] hover:bg-white transition-colors duration-200"
+          >
+            Generate Free &rarr;
+          </button>
+        </div>
       </nav>
 
       {/* LOADING OVERLAY */}

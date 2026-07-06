@@ -52,3 +52,14 @@ export interface Bot {
   createdAt: string;
 }
 
+export type ListBotsParams = {
+/**
+ * Comma-separated list of bot ids
+ */
+ids: string;
+};
+
+export type ListBots200 = {
+  bots: Bot[];
+};
+

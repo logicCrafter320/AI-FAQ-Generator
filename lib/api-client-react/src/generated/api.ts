@@ -27,7 +27,9 @@ import type {
   CreateBotInput,
   FaqGenerateInput,
   FaqGenerateResult,
-  HealthStatus
+  HealthStatus,
+  ListBots200,
+  ListBotsParams
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -276,6 +278,91 @@ export const useChatWithBot = <TError = ErrorType<ApiError>,
       > => {
       return useMutation(getChatWithBotMutationOptions(options));
     }
+
+export const getListBotsUrl = (params: ListBotsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/faq/bots?${stringifiedParams}` : `/api/faq/bots`
+}
+
+/**
+ * Returns saved bots matching the given comma-separated ids, used to render a local "My Bots" list
+ * @summary Fetch multiple saved FAQ bots by id
+ */
+export const listBots = async (params: ListBotsParams, options?: RequestInit): Promise<ListBots200> => {
+
+  return customFetch<ListBots200>(getListBotsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListBotsQueryKey = (params?: ListBotsParams,) => {
+    return [
+    `/api/faq/bots`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListBotsQueryOptions = <TData = Awaited<ReturnType<typeof listBots>>, TError = ErrorType<unknown>>(params: ListBotsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listBots>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListBotsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listBots>>> = ({ signal }) => listBots(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listBots>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListBotsQueryResult = NonNullable<Awaited<ReturnType<typeof listBots>>>
+export type ListBotsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Fetch multiple saved FAQ bots by id
+ */
+
+export function useListBots<TData = Awaited<ReturnType<typeof listBots>>, TError = ErrorType<unknown>>(
+ params: ListBotsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listBots>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListBotsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getCreateBotUrl = () => {
 

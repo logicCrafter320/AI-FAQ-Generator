@@ -92,6 +92,31 @@ paths:
                 $ref: "#/components/schemas/ApiError"
 
   /faq/bots:
+    get:
+      operationId: listBots
+      tags: [faq]
+      summary: Fetch multiple saved FAQ bots by id
+      description: Returns saved bots matching the given comma-separated ids, used to render a local "My Bots" list
+      parameters:
+        - name: ids
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Comma-separated list of bot ids
+      responses:
+        "200":
+          description: Bots found
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [bots]
+                properties:
+                  bots:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Bot"
     post:
       operationId: createBot
       tags: [faq]
