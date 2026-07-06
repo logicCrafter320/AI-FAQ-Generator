@@ -45,6 +45,7 @@ export default function SharedBot() {
           question: userMsg,
           faqs: bot.faqs,
           businessDescription: bot.businessDescription,
+          botId: bot.id,
         },
       },
       {

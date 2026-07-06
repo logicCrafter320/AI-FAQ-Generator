@@ -13,4 +13,9 @@ export interface ChatInput {
   faqs: FaqItem[];
   /** @nullable */
   businessDescription?: string | null;
+  /**
+     * If provided, increments the chat count for this saved bot
+     * @nullable
+     */
+  botId?: string | null;
 }

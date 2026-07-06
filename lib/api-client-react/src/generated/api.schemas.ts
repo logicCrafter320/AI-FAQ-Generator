@@ -29,6 +29,11 @@ export interface ChatInput {
   faqs: FaqItem[];
   /** @nullable */
   businessDescription?: string | null;
+  /**
+     * If provided, increments the chat count for this saved bot
+     * @nullable
+     */
+  botId?: string | null;
 }
 
 export interface ChatResult {
@@ -50,6 +55,8 @@ export interface Bot {
   businessDescription: string;
   faqs: FaqItem[];
   createdAt: string;
+  viewCount: number;
+  chatCount: number;
 }
 
 export type ListBotsParams = {

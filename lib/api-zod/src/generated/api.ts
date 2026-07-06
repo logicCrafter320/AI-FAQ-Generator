@@ -50,7 +50,8 @@ export const ChatWithBotBody = zod.object({
   "question": zod.string(),
   "answer": zod.string()
 })),
-  "businessDescription": zod.string().nullish()
+  "businessDescription": zod.string().nullish(),
+  "botId": zod.string().nullish().describe('If provided, increments the chat count for this saved bot')
 })
 
 export const ChatWithBotResponse = zod.object({
@@ -74,7 +75,9 @@ export const ListBotsResponse = zod.object({
   "question": zod.string(),
   "answer": zod.string()
 })),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "viewCount": zod.number(),
+  "chatCount": zod.number()
 }))
 })
 
@@ -102,7 +105,9 @@ export const CreateBotResponse = zod.object({
   "question": zod.string(),
   "answer": zod.string()
 })),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "viewCount": zod.number(),
+  "chatCount": zod.number()
 })
 
 
@@ -120,7 +125,9 @@ export const GetBotResponse = zod.object({
   "question": zod.string(),
   "answer": zod.string()
 })),
-  "createdAt": zod.string()
+  "createdAt": zod.string(),
+  "viewCount": zod.number(),
+  "chatCount": zod.number()
 })
 
 

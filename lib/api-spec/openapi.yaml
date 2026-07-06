@@ -216,6 +216,9 @@ components:
             $ref: "#/components/schemas/FaqItem"
         businessDescription:
           type: ["string", "null"]
+        botId:
+          type: ["string", "null"]
+          description: If provided, increments the chat count for this saved bot
 
     ChatResult:
       type: object
@@ -245,7 +248,7 @@ components:
 
     Bot:
       type: object
-      required: [id, businessDescription, faqs, createdAt]
+      required: [id, businessDescription, faqs, createdAt, viewCount, chatCount]
       properties:
         id:
           type: string
@@ -257,3 +260,7 @@ components:
             $ref: "#/components/schemas/FaqItem"
         createdAt:
           type: string
+        viewCount:
+          type: integer
+        chatCount:
+          type: integer

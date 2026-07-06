@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { Router, type IRouter } from "express";
-import { eq, inArray } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { GenerateFaqsBody, ChatWithBotBody, CreateBotBody } from "@workspace/api-zod";
 import { db, botsTable } from "@workspace/db";
 import { logger } from "../lib/logger";
@@ -91,7 +91,7 @@ router.post("/faq/chat", async (req, res): Promise<void> => {
     return;
   }
 
-  const { question, faqs, businessDescription } = parsed.data;
+  const { question, faqs, businessDescription, botId } = parsed.data;
 
   const faqContext = faqs
     .map((f, i) => `Q${i + 1}: ${f.question}\nA${i + 1}: ${f.answer}`)
@@ -110,6 +110,13 @@ Answer the user's question based on the FAQ content above. If the question match
       { role: "system", content: systemPrompt },
       { role: "user", content: question },
     ]);
+
+    if (botId) {
+      db.update(botsTable)
+        .set({ chatCount: sql`${botsTable.chatCount} + 1` })
+        .where(eq(botsTable.id, botId))
+        .catch((err) => req.log.error({ err, botId }, "Failed to increment chat count"));
+    }
 
     res.json({ answer: answer.trim() });
   } catch (err) {
@@ -139,6 +146,8 @@ router.get("/faq/bots", async (req, res): Promise<void> => {
         businessDescription: bot.businessDescription,
         faqs: bot.faqs,
         createdAt: bot.createdAt.toISOString(),
+        viewCount: bot.viewCount,
+        chatCount: bot.chatCount,
       })),
     });
   } catch (err) {
@@ -168,6 +177,8 @@ router.post("/faq/bots", async (req, res): Promise<void> => {
       businessDescription: bot.businessDescription,
       faqs: bot.faqs,
       createdAt: bot.createdAt.toISOString(),
+      viewCount: bot.viewCount,
+      chatCount: bot.chatCount,
     });
   } catch (err) {
     req.log.error({ err }, "Failed to save bot");
@@ -179,18 +190,24 @@ router.get("/faq/bots/:id", async (req, res): Promise<void> => {
   const { id } = req.params;
 
   try {
-    const [bot] = await db.select().from(botsTable).where(eq(botsTable.id, id)).limit(1);
+    const [updated] = await db
+      .update(botsTable)
+      .set({ viewCount: sql`${botsTable.viewCount} + 1` })
+      .where(eq(botsTable.id, id))
+      .returning();
 
-    if (!bot) {
+    if (!updated) {
       res.status(404).json({ error: "Bot not found" });
       return;
     }
 
     res.json({
-      id: bot.id,
-      businessDescription: bot.businessDescription,
-      faqs: bot.faqs,
-      createdAt: bot.createdAt.toISOString(),
+      id: updated.id,
+      businessDescription: updated.businessDescription,
+      faqs: updated.faqs,
+      createdAt: updated.createdAt.toISOString(),
+      viewCount: updated.viewCount,
+      chatCount: updated.chatCount,
     });
   } catch (err) {
     req.log.error({ err }, "Failed to fetch bot");

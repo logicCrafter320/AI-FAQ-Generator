@@ -108,6 +108,10 @@ export default function Dashboard() {
                 <p className="text-xs text-[#888888] mt-1 font-fira">
                   {bot.faqs.length} FAQs &middot; saved {new Date(bot.createdAt).toLocaleDateString()}
                 </p>
+                <p className="text-xs text-[#ff6b35] mt-2 font-fira">
+                  {bot.viewCount} {bot.viewCount === 1 ? "view" : "views"} &middot; {bot.chatCount}{" "}
+                  {bot.chatCount === 1 ? "question" : "questions"} asked
+                </p>
               </div>
               <div className="flex items-center gap-3 shrink-0">
                 <Link

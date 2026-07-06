@@ -12,4 +12,6 @@ export interface Bot {
   businessDescription: string;
   faqs: FaqItem[];
   createdAt: string;
+  viewCount: number;
+  chatCount: number;
 }
